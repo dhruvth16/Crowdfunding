@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  firstname String
+  lastname  String
+  email     String     @unique
+  password  String
+  address   String
+  phone_num Int
+  donations Donation[]
+}
+
+model Admin {
+  id        Int        @id @default(autoincrement())
+  firstname String
+  lastname  String
+  email     String     @unique
+  password  String
+  address   String
+  phone_num Int
+  campaigns Campaign[]
+}
+
+model Campaign {
+  id                Int          @id @default(autoincrement())
+  name              String
+  description       String
+  category          CategoryType
+  target_amt        Int
+  raised_amt        Int
+  location          String?
+  start_date        DateTime?    @default(now())
+  creator_id        Int
+  creator           Admin        @relation(fields: [creator_id], references: [id])
+  status            Status
+  donation_recieved Donation[]
+}
+
+enum CategoryType {
+  EDUCATION
+  HEALTH
+  DISASTER_RELIEF
+  ORPHANAGE
+}
+
+enum Status {
+  ACTIVE
+  COMPLETED
+}
+
+model Donation {
+  id          Int      @id @default(autoincrement())
+  donor_id    Int
+  campaign_id Int
+  donor       User     @relation(fields: [donor_id], references: [id])
+  campaign    Campaign @relation(fields: [campaign_id], references: [id])
+}

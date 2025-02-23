@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Campaign` MODIFY `start_date` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3);
