@@ -18,7 +18,7 @@ function Button(props: ButtonProps) {
       onClick={props.onClick}
       className={`${btnStyle} py-${
         props.size === "sm" ? 1 : props.size === "md" ? 1 : 2
-      } cursor-pointer px-6 py-2 rounded-full transition`}
+      } cursor-pointer px-6 py-2 rounded-full transition font-semibold`}
     >
       {props.text}
     </button>

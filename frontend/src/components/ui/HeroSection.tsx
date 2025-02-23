@@ -34,7 +34,7 @@ function HeroSection({ isVisible }: HeroProp) {
           the power of giving
         </p>
         <Link
-          to="/role"
+          to="/userSignin"
           className={`bg-white text-black px-8 py-3 rounded-full font-semibold hover:bg-gray-200 transition-all duration-300 transform ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
           }`}

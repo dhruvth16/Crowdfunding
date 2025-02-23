@@ -23,11 +23,11 @@ const ChooseRole = () => {
         <Link to="/adminSignin" className="group cursor-pointer text-center">
           <div className="w-36 h-36 md:w-48 md:h-48 bg-yellow-500 group-hover:bg-yellow-600 rounded-full flex items-center justify-center shadow-lg transform transition-transform duration-300 group-hover:scale-110">
             <span className="text-xl md:text-3xl font-bold text-white">
-              Captain
+              Admin
             </span>
           </div>
           <p className="text-white text-sm md:text-lg font-medium mt-4 opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-            Login as a Captain
+            Login as an Admin
           </p>
         </Link>
       </div>
