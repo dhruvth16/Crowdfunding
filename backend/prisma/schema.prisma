@@ -14,7 +14,7 @@ model User {
   email     String     @unique
   password  String
   address   String
-  phone_num Int
+  phone_num String
   donations Donation[]
 }
 
@@ -25,7 +25,7 @@ model Admin {
   email     String     @unique
   password  String
   address   String
-  phone_num Int
+  phone_num String
   campaigns Campaign[]
 }
 

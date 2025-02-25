@@ -40,7 +40,7 @@ const userSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         firstname: zod_1.z.string().min(3).max(100),
         lastname: zod_1.z.string().min(3).max(100),
         address: zod_1.z.string().min(3).max(200),
-        phone_num: zod_1.z.number()
+        phone_num: zod_1.z.string().max(12)
     });
     const safeParsedData = requiredBody.safeParse(req.body);
     if (!safeParsedData.success) {

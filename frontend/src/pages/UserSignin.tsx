@@ -1,25 +1,45 @@
 import { Eye, EyeOff, Heart } from "lucide-react";
 import themeImg from "../assets/themeImg.avif";
 import { Input } from "../components/ui/Input";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Button from "../components/ui/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { UserDataContext } from "../context/UserDataContext";
+import axios from "axios";
 
 function UserSignup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const { setUser } = useContext(UserDataContext);
+  const navigate = useNavigate();
+
+  const signin = async () => {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/user/signin`,
+      {
+        email,
+        password,
+      }
+    );
+
+    setUser(response.data);
+    localStorage.setItem("user", JSON.stringify(response.data.token));
+    navigate("/user-dashboard");
+    console.log("User::: ", response.data);
+  };
+
   return (
     <div className="flex items-center w-full h-screen">
       <h2 className="flex items-center gap-2 p-4 text-xl font-semibold absolute top-0 border-b-[1px] border-gray-300 w-full">
         <Heart />
-        Crowdfunding
+        <Link to="/">Crowdfunding</Link>
       </h2>
       <div className="md:w-1/2 w-full h-screen flex items-center justify-center p-4 flex-col">
         <div className="md:w-3/4 md:mt-0 w-full mt-[220px] bg-gradient-to-l from-blue-100 to-blue-50 p-8 rounded-lg">
           <h2 className="text-2xl font-semibold mb-4 text-center">Sign in</h2>
-          <div>
+          <form onSubmit={(e) => e.preventDefault()}>
             <div>
               <label htmlFor="email" className="text-lg font-semibold">
                 Email
@@ -56,8 +76,13 @@ function UserSignup() {
                 )}
               </button>
             </div>
-          </div>
-          <Button variant="primary" text="Sign in" size="lg" />
+            <Button
+              onClick={signin}
+              variant="primary"
+              text="Sign in"
+              size="lg"
+            />
+          </form>
         </div>
         <p className="mt-4">
           Don't have an account?{" "}

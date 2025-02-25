@@ -9,6 +9,8 @@ import AdminSignup from "./pages/AdminSignup.tsx";
 import UserSignup from "./pages/UserSignup.tsx";
 import AdminSignin from "./pages/AdminSignin.tsx";
 import ChooseRole from "./pages/ChooseRole.tsx";
+import UserDashBoard from "./pages/UserDashBoard.tsx";
+import AdminDashboard from "./pages/AdminDashboard.tsx";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +20,14 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <LandingPage />,
+      },
+      {
+        path: "/user-dashboard",
+        element: <UserDashBoard />,
+      },
+      {
+        path: "/admin-dashboard",
+        element: <AdminDashboard />,
       },
     ],
   },

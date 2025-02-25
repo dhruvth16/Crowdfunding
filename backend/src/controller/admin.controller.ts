@@ -28,7 +28,7 @@ export const adminSignup = async (req: Request, res: Response): Promise<void> =>
       firstname: z.string().min(3).max(100),
       lastname: z.string().min(3).max(100),
       address: z.string().min(3).max(200),
-      phone_num: z.number()
+      phone_num: z.string().max(12)
   });
 
   const safeParsedData = requiredBody.safeParse(req.body)
