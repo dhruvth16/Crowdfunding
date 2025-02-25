@@ -25,7 +25,7 @@ function UserSignup() {
     );
 
     setUser(response.data);
-    localStorage.setItem("admin", JSON.stringify(response.data.token));
+    localStorage.setItem("token", JSON.stringify(response.data.token));
     navigate("/admin-dashboard");
     console.log("User::: ", response.data);
   };
