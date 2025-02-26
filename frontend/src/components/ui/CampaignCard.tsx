@@ -16,7 +16,7 @@ function CampaignCard({ campaigns }: { campaigns: Campaign[] }) {
                 <div className="bg-gray-100 flex items-center justify-center object-cover rounded-md md:w-40 w-full h-40">
                   <img
                     className="h-40 md:w-40 w-full rounded-md"
-                    src="https://plus.unsplash.com/premium_photo-1680396766429-ccfb5626a40d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    src={campaign.image}
                     alt="campaign image"
                   />
                 </div>

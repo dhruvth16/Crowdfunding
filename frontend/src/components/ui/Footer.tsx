@@ -29,7 +29,7 @@ function Footer() {
           </div>
         </div>
         <div className="mt-8 text-center text-gray-400 text-sm">
-          © 2024 Crowdfunding. All rights reserved.
+          © 2025 Crowdfunding. All rights reserved.
         </div>
       </div>
     </footer>

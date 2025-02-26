@@ -62,6 +62,9 @@ export const getAllCampaign = async (req: Request, res: Response): Promise<void>
         const campaigns = await prisma.campaign.findMany({
             include: {
                 creator: true
+            },
+            orderBy: {
+                start_date: "desc"
             }
         })
     

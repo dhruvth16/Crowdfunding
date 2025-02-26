@@ -60,6 +60,9 @@ const getAllCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function*
         const campaigns = yield prisma.campaign.findMany({
             include: {
                 creator: true
+            },
+            orderBy: {
+                start_date: "desc"
             }
         });
         console.log(campaigns);
