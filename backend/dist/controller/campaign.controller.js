@@ -38,7 +38,8 @@ const createCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function*
         });
         return;
     }
-    const campaignData = Object.assign(Object.assign({}, parsedData.data), { creator_id, location: parsedData.data.location || null });
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
+    const campaignData = Object.assign(Object.assign({}, parsedData.data), { creator_id, location: parsedData.data.location || null, image });
     console.log(campaignData);
     try {
         const campaign = yield prisma.campaign.create({

@@ -9,8 +9,6 @@ function UserProtectedWrapper({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const { setUser } = useContext(UserDataContext);
 
-  console.log("Token:: ", token);
-
   useEffect(() => {
     if (!token) {
       navigate("/");
@@ -36,8 +34,6 @@ function UserProtectedWrapper({ children }: { children: ReactNode }) {
 
     fetchData();
   }, [token, navigate, setUser]);
-
-  console.log("Loadin:: ", loading);
 
   if (loading) {
     return (

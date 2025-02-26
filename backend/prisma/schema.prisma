@@ -41,6 +41,7 @@ model Campaign {
   creator_id        Int
   creator           Admin        @relation(fields: [creator_id], references: [id])
   status            Status
+  image             String?
   donation_recieved Donation[]
 }
 

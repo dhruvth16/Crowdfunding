@@ -1,8 +1,11 @@
+import { ReactElement } from "react";
+
 type ButtonProps = {
   variant: "primary" | "secondary" | "tertiary";
   text: string;
   size: "sm" | "md" | "lg";
   onClick?: () => void;
+  icon?: ReactElement;
 };
 
 function Button(props: ButtonProps) {
@@ -18,9 +21,9 @@ function Button(props: ButtonProps) {
       onClick={props.onClick}
       className={`${btnStyle} py-${
         props.size === "sm" ? 1 : props.size === "md" ? 1 : 2
-      } cursor-pointer px-6 py-2 rounded-full transition font-semibold`}
+      } cursor-pointer px-6 py-2 rounded-full transition font-semibold flex gap-2`}
     >
-      {props.text}
+      {props.text} {props.icon}
     </button>
   );
 }

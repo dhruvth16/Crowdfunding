@@ -5,7 +5,6 @@ import { PrismaClient } from "@prisma/client";
 import { z } from 'zod'
 const prisma = new PrismaClient();
 
-
 export const createCampaign = async (req: CustomRequest, res: Response): Promise<void> => {
     if (!req.creator_id) {
         res.status(401).json({ message: "Unauthorized: Admin ID missing" });
@@ -34,10 +33,13 @@ export const createCampaign = async (req: CustomRequest, res: Response): Promise
         return
     }
 
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
+
     const campaignData = {
         ...parsedData.data,
         creator_id, 
         location: parsedData.data.location || null, 
+        image
     };
     console.log(campaignData)
 
