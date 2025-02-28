@@ -23,7 +23,7 @@ const authMiddleware = (req, res, next) => {
             res.status(401).json({ message: "Token is not valid" });
             return;
         }
-        req.creator_id = decoded.id.toString();
+        req.adminId = decoded.id.toString();
         next();
     }
     catch (err) {

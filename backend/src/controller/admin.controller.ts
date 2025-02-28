@@ -53,7 +53,7 @@ export const adminSignup = async (req: Request, res: Response): Promise<void> =>
     });
     if (existingUser) {
         res.status(409).json({
-            message: "User already exists!"
+            message: "Admin already exists!"
         })    
         return
     }
@@ -122,7 +122,7 @@ export const adminSignin = async (req: Request, res: Response): Promise<void> =>
 
         if (!existingUser) {
             res.status(404).json({
-                message: "User not found!"
+                message: "Admin not found!"
             })
             return
         }
@@ -146,7 +146,7 @@ export const adminSignin = async (req: Request, res: Response): Promise<void> =>
         )
 
         res.status(200).json({
-            message: "User signed in successfully!",
+            message: "Admin signed in successfully!",
             token
         })
 
@@ -157,45 +157,20 @@ export const adminSignin = async (req: Request, res: Response): Promise<void> =>
     }
 }
 
-export const getCampaign = async (req: CustomRequest, res: Response): Promise<void> => {
-    if (!req.creator_id) {
-      res.status(401).json({ message: "Unauthorized: Admin ID missing" });
-      return
-    }
-    const creator_id = parseInt(req.creator_id); 
-
-    try {
-      const campaign = await prisma.campaign.findMany({
-        where: {
-            creator_id: creator_id
-        }
-      })
-      console.log(campaign)
-      res.json({
-        campaign
-      })
-    } catch (error) {
-        console.error("Error getting campaign:", error);
-        res.status(500).json({ message: "Internal server error", error });
-        return
-    }
-}
-
 export const editCampaign = async (req: CustomRequest, res: Response): Promise<void> => {
-    if (!req.creator_id) {
+    if (!req.adminId) {
         res.status(401).json({ message: "Unauthorized: Admin ID missing" });
         return;
     }
     
-    const creator_id = parseInt(req.creator_id); 
+    const admin = parseInt(req.adminId); 
     const { id } = req.params;
     const campaignId = parseInt(id); 
 
     const campaignSchema = z.object({
         name: z.string().min(3).optional(),
         description: z.string().min(10).optional(),
-        target_amt: z.number().optional(),
-        raised_amt: z.number().optional(),
+        target_amt: z.string().optional(),
         category: z.nativeEnum(CategoryType).optional(),
         location: z.string().optional(),
         status: z.nativeEnum(Status).optional(),
@@ -220,7 +195,7 @@ export const editCampaign = async (req: CustomRequest, res: Response): Promise<v
             return;
         }
 
-        if (existingCampaign.creator_id !== creator_id) {
+        if (existingCampaign.creator_id !== admin) {
             res.status(403).json({ message: "Forbidden: You do not own this campaign" });
             return;
         }
@@ -241,14 +216,14 @@ export const editCampaign = async (req: CustomRequest, res: Response): Promise<v
 };
 
 export const removeCampaign = async (req: CustomRequest, res: Response): Promise<void> => {
-  if (!req.creator_id) {
+  if (!req.adminId) {
     res.status(401).json({
       message: "Unauthorized: Admin is missing"
     })
     return;
   }
 
-  const creator_id = parseInt(req.creator_id)
+  const admin = parseInt(req.adminId)
   const { id } = req.params
   const campaignId = parseInt(id)
 
@@ -264,7 +239,7 @@ export const removeCampaign = async (req: CustomRequest, res: Response): Promise
       })
       return
     }
-    if (existingCampaign.creator_id !== creator_id) {
+    if (existingCampaign.creator_id !== admin) {
       res.status(403).json({ message: "Forbidden: You do not own this campaign" });
       return;
     }
@@ -286,4 +261,28 @@ export const removeCampaign = async (req: CustomRequest, res: Response): Promise
     })
   }
 
+}
+
+export const getCampaign = async (req: CustomRequest, res: Response): Promise<void> => {
+    if (!req.adminId) {
+      res.status(401).json({ message: "Unauthorized: Admin ID missing" });
+      return
+    }
+    const admin = parseInt(req.adminId); 
+    
+    try {
+      const campaign = await prisma.campaign.findMany({
+        where: {
+          creator_id: admin
+        }
+      });
+      // console.log(campaign)
+      res.json({
+        campaign
+      })
+    } catch (error) {
+        console.error("Error getting campaign:", error);
+        res.status(500).json({ message: "Internal server error", error });
+        return
+    }
 }

@@ -5,11 +5,10 @@ interface InputProps {
   placeholder?: string;
   id: string;
 }
+export const inputVariants =
+  "border outline-none w-full border-gray-300 rounded-md px-4 py-2 mt-1 mb-4 bg-blue-50";
 
 export const Input = (props: InputProps) => {
-  const inputVariants =
-    "border outline-none w-full border-gray-300 rounded-md px-4 py-2 mt-1 mb-4 bg-blue-50";
-
   return (
     <>
       <input

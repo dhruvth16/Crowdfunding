@@ -15,17 +15,16 @@ const client_2 = require("@prisma/client");
 const zod_1 = require("zod");
 const prisma = new client_2.PrismaClient();
 const createCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.creator_id) {
+    if (!req.adminId) {
         res.status(401).json({ message: "Unauthorized: Admin ID missing" });
         return;
     }
-    const creator_id = parseInt(req.creator_id);
+    const creator_id = parseInt(req.adminId);
     console.log(creator_id);
     const requiredBody = zod_1.z.object({
         name: zod_1.z.string().min(3),
         description: zod_1.z.string().min(10),
-        target_amt: zod_1.z.number(),
-        raised_amt: zod_1.z.number(),
+        target_amt: zod_1.z.string(),
         category: zod_1.z.nativeEnum(client_1.CategoryType),
         location: zod_1.z.string().optional(),
         status: zod_1.z.nativeEnum(client_1.Status),
@@ -39,8 +38,7 @@ const createCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function*
         return;
     }
     const image = req.file ? `/uploads/${req.file.filename}` : null;
-    const campaignData = Object.assign(Object.assign({}, parsedData.data), { creator_id, location: parsedData.data.location || null, image });
-    console.log(campaignData);
+    const campaignData = Object.assign(Object.assign({}, parsedData.data), { target_amt: parsedData.data.target_amt.toString(), creator_id, location: parsedData.data.location || null, image });
     try {
         const campaign = yield prisma.campaign.create({
             data: campaignData,
@@ -65,7 +63,6 @@ const getAllCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function*
                 start_date: "desc"
             }
         });
-        console.log(campaigns);
         res.json({ campaigns });
     }
     catch (error) {

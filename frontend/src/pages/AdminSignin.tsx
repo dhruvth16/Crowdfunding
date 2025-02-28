@@ -4,30 +4,30 @@ import { Input } from "../components/ui/Input";
 import { useContext, useState } from "react";
 import Button from "../components/ui/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { UserDataContext } from "../context/UserDataContext";
 import axios from "axios";
+import { AdminDataContext } from "../context/AdminDataContext";
 
-function UserSignup() {
+function AdminSignin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { setUser } = useContext(UserDataContext);
+  const { setAdmin } = useContext(AdminDataContext);
   const navigate = useNavigate();
 
   const signin = async () => {
     const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/user/signin`,
+      `${import.meta.env.VITE_BASE_URL}/admin/signin`,
       {
         email,
         password,
       }
     );
 
-    setUser(response.data);
-    localStorage.setItem("token", JSON.stringify(response.data.token));
+    setAdmin(response.data);
+    localStorage.setItem("admin", JSON.stringify(response.data.token));
     navigate("/admin-dashboard");
-    console.log("User::: ", response.data);
+    console.log("Admin::: ", response.data);
   };
 
   return (
@@ -98,4 +98,4 @@ function UserSignup() {
   );
 }
 
-export default UserSignup;
+export default AdminSignin;

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeCampaign = exports.editCampaign = exports.getCampaign = exports.adminSignin = exports.adminSignup = exports.prisma = void 0;
+exports.getCampaign = exports.removeCampaign = exports.editCampaign = exports.adminSignin = exports.adminSignup = exports.prisma = void 0;
 const client_1 = require("@prisma/client");
 exports.prisma = new client_1.PrismaClient();
 const zod_1 = require("zod");
@@ -61,7 +61,7 @@ const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         });
         if (existingUser) {
             res.status(409).json({
-                message: "User already exists!"
+                message: "Admin already exists!"
             });
             return;
         }
@@ -124,7 +124,7 @@ const adminSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         });
         if (!existingUser) {
             res.status(404).json({
-                message: "User not found!"
+                message: "Admin not found!"
             });
             return;
         }
@@ -141,7 +141,7 @@ const adminSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             expiresIn: "1h"
         });
         res.status(200).json({
-            message: "User signed in successfully!",
+            message: "Admin signed in successfully!",
             token
         });
     }
@@ -152,43 +152,18 @@ const adminSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.adminSignin = adminSignin;
-const getCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.creator_id) {
-        res.status(401).json({ message: "Unauthorized: Admin ID missing" });
-        return;
-    }
-    const creator_id = parseInt(req.creator_id);
-    try {
-        const campaign = yield exports.prisma.campaign.findMany({
-            where: {
-                creator_id: creator_id
-            }
-        });
-        console.log(campaign);
-        res.json({
-            campaign
-        });
-    }
-    catch (error) {
-        console.error("Error getting campaign:", error);
-        res.status(500).json({ message: "Internal server error", error });
-        return;
-    }
-});
-exports.getCampaign = getCampaign;
 const editCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.creator_id) {
+    if (!req.adminId) {
         res.status(401).json({ message: "Unauthorized: Admin ID missing" });
         return;
     }
-    const creator_id = parseInt(req.creator_id);
+    const admin = parseInt(req.adminId);
     const { id } = req.params;
     const campaignId = parseInt(id);
     const campaignSchema = zod_1.z.object({
         name: zod_1.z.string().min(3).optional(),
         description: zod_1.z.string().min(10).optional(),
-        target_amt: zod_1.z.number().optional(),
-        raised_amt: zod_1.z.number().optional(),
+        target_amt: zod_1.z.string().optional(),
         category: zod_1.z.nativeEnum(client_1.CategoryType).optional(),
         location: zod_1.z.string().optional(),
         status: zod_1.z.nativeEnum(client_1.Status).optional(),
@@ -209,7 +184,7 @@ const editCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             res.status(404).json({ message: "Campaign not found" });
             return;
         }
-        if (existingCampaign.creator_id !== creator_id) {
+        if (existingCampaign.creator_id !== admin) {
             res.status(403).json({ message: "Forbidden: You do not own this campaign" });
             return;
         }
@@ -229,13 +204,13 @@ const editCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.editCampaign = editCampaign;
 const removeCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.creator_id) {
+    if (!req.adminId) {
         res.status(401).json({
             message: "Unauthorized: Admin is missing"
         });
         return;
     }
-    const creator_id = parseInt(req.creator_id);
+    const admin = parseInt(req.adminId);
     const { id } = req.params;
     const campaignId = parseInt(id);
     try {
@@ -250,7 +225,7 @@ const removeCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function*
             });
             return;
         }
-        if (existingCampaign.creator_id !== creator_id) {
+        if (existingCampaign.creator_id !== admin) {
             res.status(403).json({ message: "Forbidden: You do not own this campaign" });
             return;
         }
@@ -271,3 +246,27 @@ const removeCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.removeCampaign = removeCampaign;
+const getCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.adminId) {
+        res.status(401).json({ message: "Unauthorized: Admin ID missing" });
+        return;
+    }
+    const admin = parseInt(req.adminId);
+    try {
+        const campaign = yield exports.prisma.campaign.findMany({
+            where: {
+                creator_id: admin
+            }
+        });
+        // console.log(campaign)
+        res.json({
+            campaign
+        });
+    }
+    catch (error) {
+        console.error("Error getting campaign:", error);
+        res.status(500).json({ message: "Internal server error", error });
+        return;
+    }
+});
+exports.getCampaign = getCampaign;

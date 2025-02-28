@@ -5,9 +5,9 @@ import { useContext, useState } from "react";
 import Button from "../components/ui/Button";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { UserDataContext } from "../context/UserDataContext";
+import { AdminDataContext } from "../context/AdminDataContext";
 
-function UserSignup() {
+function AdminSignup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstname, setFirstname] = useState("");
@@ -16,12 +16,12 @@ function UserSignup() {
   const [phone_num, setPhone_num] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { setUser } = useContext(UserDataContext);
+  const { setAdmin } = useContext(AdminDataContext);
   const navigate = useNavigate();
 
   const signup = async () => {
     const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/user/signup`,
+      `${import.meta.env.VITE_BASE_URL}/admin/signup`,
       {
         email,
         password,
@@ -32,7 +32,7 @@ function UserSignup() {
       }
     );
 
-    setUser(response.data);
+    setAdmin(response.data);
     navigate("/admin-dashboard");
     console.log("Admin::: ", response.data);
   };
@@ -157,4 +157,4 @@ function UserSignup() {
   );
 }
 
-export default UserSignup;
+export default AdminSignup;

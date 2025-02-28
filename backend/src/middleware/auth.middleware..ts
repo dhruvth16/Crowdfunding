@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
 export interface CustomRequest extends Request {
-  creator_id?: string;
+  adminId?: string;
 }
 
 export const authMiddleware = (
@@ -31,7 +31,7 @@ export const authMiddleware = (
         return
     }
 
-    req.creator_id = decoded.id.toString();
+    req.adminId = decoded.id.toString();
     next();
   } catch (err) {
     res.status(401).json({ message: "Token is not valid" });

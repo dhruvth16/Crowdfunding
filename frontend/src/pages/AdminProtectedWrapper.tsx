@@ -2,8 +2,8 @@ import axios from "axios";
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function UserProtectedWrapper({ children }: { children: ReactNode }) {
-  const token = localStorage.getItem("user");
+function AdminProtectedWrapper({ children }: { children: ReactNode }) {
+  const token = localStorage.getItem("admin");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -44,4 +44,4 @@ function UserProtectedWrapper({ children }: { children: ReactNode }) {
   return <div>{children}</div>;
 }
 
-export default UserProtectedWrapper;
+export default AdminProtectedWrapper;

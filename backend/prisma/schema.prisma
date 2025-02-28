@@ -34,8 +34,8 @@ model Campaign {
   name              String
   description       String
   category          CategoryType
-  target_amt        Int
-  raised_amt        Int
+  target_amt        String
+  raised_amt        Int?         @default(0)
   location          String?
   start_date        DateTime?    @default(now())
   creator_id        Int

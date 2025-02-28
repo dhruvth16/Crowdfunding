@@ -1,7 +1,7 @@
 import { ArrowDown, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import CampaignCard from "../components/ui/CampaignCard";
+import CampaignCard from "../components/ui/UserCampaignCard";
 import gsap from "gsap";
 
 export interface Campaign {
@@ -18,7 +18,7 @@ function UserDashBoard() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("user");
   const [category, setCategory] = useState(false);
   const categoryRef = useRef(null);
 
@@ -40,7 +40,7 @@ function UserDashBoard() {
           }
         );
         setCampaigns(response.data.campaigns);
-        setFilteredCampaigns(response.data.campaigns); // Initially set to all campaigns
+        setFilteredCampaigns(response.data.campaigns);
       } catch (error) {
         console.log(error);
       }

@@ -15,8 +15,8 @@ app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use("/uploads", express_1.default.static(path_1.default.join(__dirname, "uploads")));
 app.use('/api/v1/user', user_route_1.router);
-app.use('/api/v1/admin', admin_route_1.router);
 app.use('/api/v1/campaign', campaign_route_1.router);
+app.use('/api/v1/admin', admin_route_1.router);
 app.listen(process.env.PORT || 5000, () => {
     console.log(`App is running on port ${process.env.PORT}`);
 });

@@ -25,7 +25,7 @@ function UserSignup() {
     );
 
     setUser(response.data);
-    localStorage.setItem("token", JSON.stringify(response.data.token));
+    localStorage.setItem("user", JSON.stringify(response.data.token));
     navigate("/user-dashboard");
     console.log("User::: ", response.data);
   };

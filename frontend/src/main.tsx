@@ -12,6 +12,7 @@ import ChooseRole from "./pages/ChooseRole.tsx";
 import UserDashBoard from "./pages/UserDashBoard.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import UserProtectedWrapper from "./pages/UserProtectedWrapper.tsx";
+import AdminProtectedWrapper from "./pages/AdminProtectedWrapper.tsx";
 
 const router = createBrowserRouter([
   {
@@ -33,9 +34,9 @@ const router = createBrowserRouter([
       {
         path: "/admin-dashboard",
         element: (
-          <UserProtectedWrapper>
+          <AdminProtectedWrapper>
             <AdminDashboard />
-          </UserProtectedWrapper>
+          </AdminProtectedWrapper>
         ),
       },
     ],
