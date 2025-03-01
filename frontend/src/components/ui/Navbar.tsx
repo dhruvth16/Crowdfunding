@@ -1,4 +1,4 @@
-import { Heart, Search } from "lucide-react";
+import { Heart, Instagram, Mail, Twitter } from "lucide-react";
 
 function Navbar() {
   return (
@@ -8,15 +8,29 @@ function Navbar() {
           <Heart />
           CrowdFunding
         </div>
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="px-2 py-1 bg-slate-900 rounded-md outline-none hidden md:block"
-          />
-          <div className="cursor-pointer">
-            <Search />
-          </div>
+        <div className="flex items-center gap-6">
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-gray-300 transition-colors flex items-center space-x-2"
+          >
+            <Instagram className="w-6 h-6" />
+          </a>
+          <a
+            href="mailto:contact@fundhope.com"
+            className="hover:text-gray-300 transition-colors flex items-center space-x-2"
+          >
+            <Mail className="w-6 h-6" />
+          </a>
+          <a
+            href="https://x.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-gray-300 transition-colors flex items-center space-x-2"
+          >
+            <Twitter className="w-6 h-6" />
+          </a>
         </div>
       </div>
     </nav>

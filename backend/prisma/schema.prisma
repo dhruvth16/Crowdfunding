@@ -64,3 +64,13 @@ model Donation {
   donor       User     @relation(fields: [donor_id], references: [id])
   campaign    Campaign @relation(fields: [campaign_id], references: [id])
 }
+
+model Payment {
+  id         String   @id @default(uuid())
+  orderId    String   @unique
+  amount     Int
+  currency   String
+  campaignId String
+  status     String   @default("PENDING")
+  createdAt  DateTime @default(now())
+}

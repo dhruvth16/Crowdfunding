@@ -10,6 +10,7 @@ const app = (0, express_1.default)();
 const user_route_1 = require("./routes/user.route");
 const admin_route_1 = require("./routes/admin.route");
 const campaign_route_1 = require("./routes/campaign.route");
+const payment_route_1 = require("./routes/payment.route");
 const path_1 = __importDefault(require("path"));
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
@@ -17,6 +18,7 @@ app.use("/uploads", express_1.default.static(path_1.default.join(__dirname, "upl
 app.use('/api/v1/user', user_route_1.router);
 app.use('/api/v1/campaign', campaign_route_1.router);
 app.use('/api/v1/admin', admin_route_1.router);
+app.use('/payment', payment_route_1.router);
 app.listen(process.env.PORT || 5000, () => {
     console.log(`App is running on port ${process.env.PORT}`);
 });

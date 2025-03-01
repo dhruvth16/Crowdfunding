@@ -1,4 +1,4 @@
-import { Heart, Instagram, Mail } from "lucide-react";
+import { Heart, Instagram, Mail, Twitter } from "lucide-react";
 
 function Footer() {
   return (
@@ -17,14 +17,23 @@ function Footer() {
               className="hover:text-gray-300 transition-colors flex items-center space-x-2"
             >
               <Instagram className="w-5 h-5" />
-              <span>Follow us</span>
+              <span className="font-semibold">Follow us</span>
             </a>
             <a
               href="mailto:contact@fundhope.com"
               className="hover:text-gray-300 transition-colors flex items-center space-x-2"
             >
               <Mail className="w-5 h-5" />
-              <span>Contact us</span>
+              <span className="font-semibold">Contact us</span>
+            </a>
+            <a
+              href="https://x.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-300 transition-colors flex items-center space-x-2"
+            >
+              <Twitter className="w-5 h-5" />
+              <span className="font-semibold">X</span>
             </a>
           </div>
         </div>

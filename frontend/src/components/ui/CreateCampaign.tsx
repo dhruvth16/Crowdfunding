@@ -40,7 +40,7 @@ function CreateCampaign({ campaignRef, setIscampaign }: CreateCampaignProps) {
         {
           name,
           description,
-          target_amt: target_amt,
+          target_amt,
           location,
           status: status.toUpperCase(),
           category: category.toUpperCase(),

@@ -63,7 +63,7 @@ function UserDashBoard() {
   };
 
   return (
-    <div className="md:px-4 lg:px-40 px-2 w-full h-screen pt-[70px] bg-gray-50 overflow-y-scroll no-scrollbar">
+    <div className="md:px-4 lg:px-40 px-2 w-full min-h-screen pt-[70px] bg-gray-50">
       <div className="flex items-center justify-between py-4 text-black">
         <h1 className="font-semibold text-3xl">Campaigns</h1>
         <h2
@@ -101,7 +101,7 @@ function UserDashBoard() {
             Health
           </div>
           <div
-            onClick={() => filterCampaigns("Disaster Relief")}
+            onClick={() => filterCampaigns("Disaster_Relief")}
             className="cursor-pointer mb-3 text-blue-600 hover:text-blue-500"
           >
             Disaster_Relief

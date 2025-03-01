@@ -1,8 +1,30 @@
 import { Droplet } from "lucide-react";
 import Button from "./Button";
 import { Campaign } from "../../pages/UserDashBoard";
+import PaymentPage from "./PaymentPage";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 
 function CampaignCard({ campaigns }: { campaigns: Campaign[] }) {
+  const [isPayment, setIsPayment] = useState(false);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(
+    null
+  );
+  const paymentRef = useRef(null);
+
+  useEffect(() => {
+    if (isPayment && paymentRef.current) {
+      gsap.to(paymentRef.current, { visibility: "visible", duration: 0.8 });
+    } else if (paymentRef.current) {
+      gsap.to(paymentRef.current, { visibility: "hidden", duration: 0.8 });
+    }
+  }, [isPayment]);
+
+  const handleDonateClick = (campaignId: string) => {
+    setSelectedCampaignId(campaignId);
+    setIsPayment(true);
+  };
+
   return (
     <div>
       <div className="flex flex-col">
@@ -42,6 +64,7 @@ function CampaignCard({ campaigns }: { campaigns: Campaign[] }) {
                         size="lg"
                         text="Donate"
                         icon={<Droplet />}
+                        onClick={() => handleDonateClick(campaign.id)}
                       />
                     </div>
                     <p className="text-sm md:text-right">
@@ -57,6 +80,13 @@ function CampaignCard({ campaigns }: { campaigns: Campaign[] }) {
           );
         })}
       </div>
+      {isPayment && selectedCampaignId && (
+        <PaymentPage
+          paymentRef={paymentRef}
+          setIsPayment={setIsPayment}
+          campaignId={selectedCampaignId}
+        />
+      )}
     </div>
   );
 }
