@@ -10,5 +10,5 @@ exports.router = express_1.default.Router();
 exports.router.get('/', (req, res) => {
     res.send("Hii, there");
 });
-exports.router.post('/create-payment', payment_controller_1.createOrder);
-exports.router.post('/verify-payment', payment_controller_1.verifyOrder);
+exports.router.post('/create-payment', payment_controller_1.createPayment);
+exports.router.post('/verify-payment', payment_controller_1.verifyPayment);

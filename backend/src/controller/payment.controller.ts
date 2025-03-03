@@ -4,7 +4,7 @@ import crypto from 'crypto'
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient();
 
-export const createOrder = async (req: Request, res: Response) => {
+export const createPayment = async (req: Request, res: Response) => {
     const razorpay = new Razorpay({
         key_id: process.env.RAZORPAY_KEY_ID,
         key_secret: process.env.RAZORPAY_KEY_SECRET
@@ -42,26 +42,39 @@ export const createOrder = async (req: Request, res: Response) => {
     }
 }
 
-export const verifyOrder = async (req: Request, res: Response) => {
-  const { order_id, payment_id, signature } = req.body;
-  const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET as string)
+export const verifyPayment = async (req: Request, res: Response) => {
+  try {
+    const { order_id, payment_id, signature, campaignId, amount } = req.body;
 
-  hmac.update(`${order_id}|${payment_id}`)
+    const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!);
+    hmac.update(order_id + "|" + payment_id);
+    const expectedSignature = hmac.digest("hex");
 
-  const generatedSignature = hmac.digest("hex")
+    if (expectedSignature !== signature) {
+      res.status(400).json({ success: false, message: "Invalid signature" });
+      return
+    }
 
-  if (generatedSignature === signature) {
-    res.status(200).json({
-      success: true,
-      message: "Payment verified!"
+    await prisma.campaign.update({
+      where: { id: campaignId },
+      data: {
+        raised_amt: {
+          increment: amount, 
+        },
+      },      
+    });
+
+    const a = await prisma.campaign.findFirst({
+      where: {
+        id: campaignId
+      }
     })
-    return;
-  } else {
-    res.status(400).json({
-      success: false,
-      message: "Payment not verified!"
-    })
-    return;
+    console.log("Updated campaign: ", a);
+
+    res.json({ success: true, message: "Payment verified and campaign updated" });
+  } catch (error) {
+    console.error("Payment verification error:", error);
+    res.status(500).json({ success: false, message: "Payment verification failed" });
   }
 
 }

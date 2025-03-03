@@ -5,7 +5,13 @@ import PaymentPage from "./PaymentPage";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
-function CampaignCard({ campaigns }: { campaigns: Campaign[] }) {
+function CampaignCard({
+  campaigns,
+  updateRaisedAmountInState,
+}: {
+  campaigns: Campaign[];
+  updateRaisedAmountInState: (campaignId: string, amount: number) => void;
+}) {
   const [isPayment, setIsPayment] = useState(false);
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(
     null
@@ -85,6 +91,7 @@ function CampaignCard({ campaigns }: { campaigns: Campaign[] }) {
           paymentRef={paymentRef}
           setIsPayment={setIsPayment}
           campaignId={selectedCampaignId}
+          updateRaisedAmountInState={updateRaisedAmountInState}
         />
       )}
     </div>

@@ -12,12 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyOrder = exports.createOrder = void 0;
+exports.verifyPayment = exports.createPayment = void 0;
 const razorpay_1 = __importDefault(require("razorpay"));
 const crypto_1 = __importDefault(require("crypto"));
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const razorpay = new razorpay_1.default({
         key_id: process.env.RAZORPAY_KEY_ID,
         key_secret: process.env.RAZORPAY_KEY_SECRET
@@ -51,25 +51,36 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).send({ error: error.message });
     }
 });
-exports.createOrder = createOrder;
-const verifyOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { order_id, payment_id, signature } = req.body;
-    const hmac = crypto_1.default.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
-    hmac.update(`${order_id}|${payment_id}`);
-    const generatedSignature = hmac.digest("hex");
-    if (generatedSignature === signature) {
-        res.status(200).json({
-            success: true,
-            message: "Payment verified!"
+exports.createPayment = createPayment;
+const verifyPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { order_id, payment_id, signature, campaignId, amount } = req.body;
+        const hmac = crypto_1.default.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
+        hmac.update(order_id + "|" + payment_id);
+        const expectedSignature = hmac.digest("hex");
+        if (expectedSignature !== signature) {
+            res.status(400).json({ success: false, message: "Invalid signature" });
+            return;
+        }
+        yield prisma.campaign.update({
+            where: { id: campaignId },
+            data: {
+                raised_amt: {
+                    increment: amount,
+                },
+            },
         });
-        return;
+        const a = yield prisma.campaign.findFirst({
+            where: {
+                id: campaignId
+            }
+        });
+        console.log("Updated campaign: ", a);
+        res.json({ success: true, message: "Payment verified and campaign updated" });
     }
-    else {
-        res.status(400).json({
-            success: false,
-            message: "Payment not verified!"
-        });
-        return;
+    catch (error) {
+        console.error("Payment verification error:", error);
+        res.status(500).json({ success: false, message: "Payment verification failed" });
     }
 });
-exports.verifyOrder = verifyOrder;
+exports.verifyPayment = verifyPayment;

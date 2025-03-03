@@ -11,7 +11,7 @@ export interface Campaign {
   target_amt: number;
   raised_amt: number;
   image: string;
-  category: string; // Assuming campaigns have a 'category' field
+  category: string;
 }
 
 function UserDashBoard() {
@@ -60,6 +60,19 @@ function UserDashBoard() {
     }
     setSelectedCategory(category);
     setCategory(false);
+  };
+
+  const updateRaisedAmountInState = (
+    campaignId: string,
+    donatedAmount: number
+  ) => {
+    setCampaigns((prevCampaigns) =>
+      prevCampaigns.map((campaign) =>
+        campaign.id === campaignId
+          ? { ...campaign, raised_amt: campaign.raised_amt + donatedAmount }
+          : campaign
+      )
+    );
   };
 
   return (
@@ -115,7 +128,10 @@ function UserDashBoard() {
         </div>
       </div>
 
-      <CampaignCard campaigns={filteredCampaigns} />
+      <CampaignCard
+        updateRaisedAmountInState={updateRaisedAmountInState}
+        campaigns={filteredCampaigns}
+      />
     </div>
   );
 }

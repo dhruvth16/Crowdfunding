@@ -1,21 +1,26 @@
 import { RefObject, useState } from "react";
 import Button from "./Button";
 import { Input, inputVariants } from "./Input";
-import { X } from "lucide-react";
+import { Edit, X } from "lucide-react";
 import axios from "axios";
-// import { Campaign } from "../../pages/UserDashBoard";
+import { Campaign } from "../../pages/UserDashBoard";
 
 interface CreateCampaignProps {
-  campaignRef: RefObject<HTMLDivElement | null>;
-  setIscampaign: (value: boolean) => void;
-  // addCampaignToState: (updatedCampaign: Campaign) => void;
+  editcampaignRef: RefObject<HTMLDivElement | null>;
+  setEditCampaign: (value: boolean) => void;
+  campaignId: string;
+  updateCampaignInState: (
+    campaignId: string,
+    updatedCampaign: Campaign
+  ) => void;
 }
 
-function CreateCampaign({
-  campaignRef,
-  setIscampaign,
-}: // addCampaignToState,
-CreateCampaignProps) {
+function EditCampaign({
+  editcampaignRef,
+  setEditCampaign,
+  campaignId,
+  updateCampaignInState,
+}: CreateCampaignProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [target_amt, setTarget_amt] = useState("");
@@ -25,22 +30,23 @@ CreateCampaignProps) {
   const [image, setImage] = useState("");
   const token = localStorage.getItem("admin")?.replace(/^"(.*)"$/, "$1");
 
-  const createCampaign = async () => {
+  const editCampaign = async () => {
     if (
-      name.length == 0 ||
-      description.length == 0 ||
-      target_amt.length == 0 ||
-      location.length == 0 ||
-      status.length == 0 ||
-      category.length == 0 ||
-      image.length == 0
+      !name.trim() ||
+      !description.trim() ||
+      !target_amt.trim() ||
+      !location.trim() ||
+      !status.trim() ||
+      !category.trim() ||
+      !image.trim()
     ) {
-      alert("Please fill all fields");
+      setEditCampaign(false);
       return;
     }
+
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/campaign/create-campaign`,
+      const response = await axios.put(
+        `${import.meta.env.VITE_BASE_URL}/admin/edit-campaign/${campaignId}`,
         {
           name,
           description,
@@ -51,26 +57,22 @@ CreateCampaignProps) {
           image,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      // addCampaignToState(response.data);
-      window.location.reload();
-      setIscampaign(false);
-      console.log(response.data);
+      updateCampaignInState(campaignId, response.data);
 
-      alert("Campaign created successfully!");
+      setEditCampaign(false);
     } catch (error) {
-      console.error("Error creating campaign:", error);
+      console.error("Error editing campaign:", error);
+      setEditCampaign(false);
     }
   };
 
   return (
     <div
-      ref={campaignRef}
+      ref={editcampaignRef}
       className="fixed invisible inset-0 flex items-center justify-center bg-black/50 pt-[220px] md:pt-8 overflow-y-scroll md:overflow-y-scroll z-50 md:p-10 p-2"
     >
       <form
@@ -81,7 +83,10 @@ CreateCampaignProps) {
           <h1 className="text-2xl font-semibold text-center mb-5">
             Create Campaign
           </h1>
-          <div onClick={() => setIscampaign(false)} className="cursor-pointer">
+          <div
+            onClick={() => setEditCampaign(false)}
+            className="cursor-pointer"
+          >
             <X />
           </div>
         </div>
@@ -187,9 +192,10 @@ CreateCampaignProps) {
         <div className="flex justify-center">
           <Button
             variant="primary"
-            text="Create Campaign"
+            text="Edit Campaign"
             size="lg"
-            onClick={createCampaign}
+            onClick={editCampaign}
+            icon={<Edit />}
           />
         </div>
       </form>
@@ -197,4 +203,4 @@ CreateCampaignProps) {
   );
 }
 
-export default CreateCampaign;
+export default EditCampaign;

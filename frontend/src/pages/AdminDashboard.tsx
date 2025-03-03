@@ -1,4 +1,4 @@
-import { ArrowDown, Heart, Plus, X } from "lucide-react";
+import { ArrowDown, Plus, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import gsap from "gsap";
@@ -13,7 +13,7 @@ export interface Campaign {
   target_amt: number;
   raised_amt: number;
   image: string;
-  category: string; // Assuming campaigns have a 'category' field
+  category: string;
 }
 
 function UserDashBoard() {
@@ -21,11 +21,38 @@ function UserDashBoard() {
   const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [category, setCategory] = useState(false);
-  const [isCampaign, setIsCampaign] = useState(false); // make it false later
+  const [isCampaign, setIsCampaign] = useState(false);
 
   const token = localStorage.getItem("admin")?.replace(/^"(.*)"$/, "$1");
   const categoryRef = useRef<HTMLDivElement>(null);
   const campaignRef = useRef<HTMLDivElement>(null);
+
+  const updateCampaignInState = (
+    campaignId: string,
+    updatedCampaign: Campaign
+  ) => {
+    setCampaigns((prevCampaigns) =>
+      prevCampaigns.map((campaign) =>
+        campaign.id === campaignId ? updatedCampaign : campaign
+      )
+    );
+  };
+
+  // const addCampaignToState = (newCampaign: Campaign) => {
+  //   setCampaigns((prevCampaigns) => {
+  //     const isDuplicate = prevCampaigns.some(
+  //       (campaign) => campaign.id === newCampaign.id
+  //     );
+  //     if (isDuplicate) return prevCampaigns;
+  //     return [...prevCampaigns, newCampaign];
+  //   });
+  // };
+
+  // const removeCampaignFromState = (campaignId: string) => {
+  //   setCampaigns((prevCampaigns) =>
+  //     prevCampaigns.filter((campaign) => campaign.id !== campaignId)
+  //   );
+  // };
 
   useEffect(() => {
     if (category && categoryRef.current) {
@@ -75,12 +102,11 @@ function UserDashBoard() {
   };
 
   return (
-    <div className="md:px-4 lg:px-40 px-2 w-full h-screen pt-[70px] bg-gray-50 overflow-y-scroll no-scrollbar">
-      <div className="flex items-center justify-between py-4 text-black">
-        <h1 className="flex items-center gap-2 font-semibold md:text-3xl text-xl">
-          Campaign by you
-          <Heart />
-        </h1>
+    <div className="md:px-4 lg:px-40 px-2 w-full min-h-screen pt-[70px] bg-gray-50 overflow-y-scroll no-scrollbar">
+      <div className="flex items-center gap-4 justify-between py-4 text-black">
+        <div className="flex items-center md:gap-2 font-semibold md:text-3xl text-lg">
+          <h2>Campaign by you</h2>
+        </div>
         <div className="md:flex-row flex items-center gap-3 flex-col">
           <Button
             text="Create"
@@ -91,7 +117,7 @@ function UserDashBoard() {
           />
           <h2
             onClick={() => setCategory(!category)}
-            className="flex cursor-pointer hover:text-blue-600 text-blue-700"
+            className="flex items-center cursor-pointer hover:text-blue-600 text-blue-700 md:text-lg text-sm"
           >
             {selectedCategory ? selectedCategory : "Category"} <ArrowDown />
           </h2>
@@ -139,8 +165,16 @@ function UserDashBoard() {
         </div>
       </div>
 
-      <AdminCampaignCard campaigns={filteredCampaigns} />
-      <CreateCampaign campaignRef={campaignRef} setIscampaign={setIsCampaign} />
+      <AdminCampaignCard
+        campaigns={filteredCampaigns}
+        updateCampaignInState={updateCampaignInState}
+        // removeCampaignFromState={removeCampaignFromState}
+      />
+      <CreateCampaign
+        campaignRef={campaignRef}
+        setIscampaign={setIsCampaign}
+        // addCampaignToState={addCampaignToState}
+      />
     </div>
   );
 }

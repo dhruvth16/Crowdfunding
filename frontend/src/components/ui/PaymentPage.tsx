@@ -10,9 +10,15 @@ interface PaymentProps {
   paymentRef: RefObject<HTMLDivElement | null>;
   setIsPayment: (value: boolean) => void;
   campaignId: string;
+  updateRaisedAmountInState: (campaignId: string, amount: number) => void;
 }
 
-function PaymentPage({ paymentRef, setIsPayment, campaignId }: PaymentProps) {
+function PaymentPage({
+  paymentRef,
+  setIsPayment,
+  campaignId,
+  updateRaisedAmountInState,
+}: PaymentProps) {
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("INR");
   const loadScript = (src: string) => {
@@ -66,21 +72,24 @@ function PaymentPage({ paymentRef, setIsPayment, campaignId }: PaymentProps) {
         order_id: order.id,
         ...order,
 
-        handler: function (response: any) {
+        handler: async function (response: any) {
           console.log(response);
 
           const options = {
             order_id: response.razorpay_order_id,
             payment_id: response.razorpay_payment_id,
             signature: response.razorpay_signature,
+            campaignId,
+            amount: Number(amount),
           };
 
-          axios
+          await axios
             .post(`${import.meta.env.VITE_PAYMENT_URL}/verify-payment`, options)
             .then((res) => {
               console.log(res.data);
               if (res.data.success) {
                 alert("Payment successfull!");
+                updateRaisedAmountInState(campaignId, Number(amount));
                 setIsPayment(false);
               } else {
                 alert("Payment failed!");
