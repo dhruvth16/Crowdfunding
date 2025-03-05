@@ -38,7 +38,7 @@ function LandingPage() {
             </a>
             <Button
               variant="primary"
-              size="sm"
+              size="lg"
               text="Sign in"
               onClick={handleClick}
             />

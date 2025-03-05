@@ -181,7 +181,7 @@ CreateCampaignProps) {
           <label htmlFor="location" className="text-lg font-semibold">
             Campaign image
           </label>
-          <Input id="image" value={image} setValue={setImage} type="file" />
+          <Input id="image" value={image} setValue={setImage} type="text" />
         </div>
 
         <div className="flex justify-center">

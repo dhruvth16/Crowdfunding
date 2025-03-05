@@ -10,7 +10,6 @@ export const createCampaign = async (req: CustomRequest, res: Response): Promise
         res.status(401).json({ message: "Unauthorized: Admin ID missing" });
         return
     }
-
     const creator_id = parseInt(req.adminId); 
     console.log(creator_id)
 
@@ -21,6 +20,7 @@ export const createCampaign = async (req: CustomRequest, res: Response): Promise
         category: z.nativeEnum(CategoryType),
         location: z.string().optional(),
         status: z.nativeEnum(Status),
+        image: z.string().optional(),
     });
 
     const parsedData = requiredBody.safeParse(req.body);
@@ -32,14 +32,11 @@ export const createCampaign = async (req: CustomRequest, res: Response): Promise
         return
     }
 
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
-
     const campaignData = {
         ...parsedData.data,
         target_amt: parsedData.data.target_amt.toString(),
         creator_id, 
         location: parsedData.data.location || null, 
-        image
     };
 
     try {

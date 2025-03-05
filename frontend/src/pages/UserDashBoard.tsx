@@ -62,18 +62,18 @@ function UserDashBoard() {
     setCategory(false);
   };
 
-  const updateRaisedAmountInState = (
-    campaignId: string,
-    donatedAmount: number
-  ) => {
-    setCampaigns((prevCampaigns) =>
-      prevCampaigns.map((campaign) =>
-        campaign.id === campaignId
-          ? { ...campaign, raised_amt: campaign.raised_amt + donatedAmount }
-          : campaign
-      )
-    );
-  };
+  // const updateRaisedAmountInState = (
+  //   campaignId: string,
+  //   donatedAmount: number
+  // ) => {
+  //   setCampaigns((prevCampaigns) =>
+  //     prevCampaigns.map((campaign) =>
+  //       campaign.id === campaignId
+  //         ? { ...campaign, raised_amt: campaign.raised_amt + donatedAmount }
+  //         : campaign
+  //     )
+  //   );
+  // };
 
   return (
     <div className="md:px-4 lg:px-40 px-2 w-full min-h-screen pt-[70px] bg-gray-50">
@@ -129,7 +129,7 @@ function UserDashBoard() {
       </div>
 
       <CampaignCard
-        updateRaisedAmountInState={updateRaisedAmountInState}
+        // updateRaisedAmountInState={updateRaisedAmountInState}
         campaigns={filteredCampaigns}
       />
     </div>

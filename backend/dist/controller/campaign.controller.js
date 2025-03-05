@@ -28,6 +28,7 @@ const createCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function*
         category: zod_1.z.nativeEnum(client_1.CategoryType),
         location: zod_1.z.string().optional(),
         status: zod_1.z.nativeEnum(client_1.Status),
+        image: zod_1.z.string().optional(),
     });
     const parsedData = requiredBody.safeParse(req.body);
     if (!parsedData.success) {
@@ -37,8 +38,7 @@ const createCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function*
         });
         return;
     }
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
-    const campaignData = Object.assign(Object.assign({}, parsedData.data), { target_amt: parsedData.data.target_amt.toString(), creator_id, location: parsedData.data.location || null, image });
+    const campaignData = Object.assign(Object.assign({}, parsedData.data), { target_amt: parsedData.data.target_amt.toString(), creator_id, location: parsedData.data.location || null });
     try {
         const campaign = yield prisma.campaign.create({
             data: campaignData,

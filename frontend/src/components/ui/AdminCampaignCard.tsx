@@ -67,7 +67,7 @@ function AdminCampaignCard({
               className="border-[1px] border-gray-200 bg-gradient-to-r from-purple-50 to-purple-100 rounded-md p-8 m-6 flex flex-col items-center md:block"
             >
               <div className="flex md:flex-row flex-col items-start gap-8 ">
-                <div className="bg-gray-100 flex items-center justify-center object-cover rounded-md md:w-40 w-full h-40">
+                <div className="bg-gray-100 flex items-center justify-center object-cover rounded-md md:w-80 w-full h-40">
                   <img
                     className="h-40 md:w-40 w-full rounded-md"
                     src={campaign.image}
@@ -100,7 +100,7 @@ function AdminCampaignCard({
                   <div>
                     <Button
                       text="Edit"
-                      size="md"
+                      size="lg"
                       variant="primary"
                       icon={<Edit />}
                       onClick={() => {
@@ -110,7 +110,7 @@ function AdminCampaignCard({
                   </div>
                   <Button
                     text="Delete"
-                    size="md"
+                    size="lg"
                     variant="tertiary"
                     icon={<X />}
                     onClick={() => deleteCampaign(campaign.id)}

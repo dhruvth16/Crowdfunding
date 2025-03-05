@@ -10,15 +10,15 @@ interface PaymentProps {
   paymentRef: RefObject<HTMLDivElement | null>;
   setIsPayment: (value: boolean) => void;
   campaignId: string;
-  updateRaisedAmountInState: (campaignId: string, amount: number) => void;
+  // updateRaisedAmountInState: (campaignId: string, amount: number) => void;
 }
 
 function PaymentPage({
   paymentRef,
   setIsPayment,
   campaignId,
-  updateRaisedAmountInState,
-}: PaymentProps) {
+}: // updateRaisedAmountInState,
+PaymentProps) {
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("INR");
   const loadScript = (src: string) => {
@@ -89,7 +89,8 @@ function PaymentPage({
               console.log(res.data);
               if (res.data.success) {
                 alert("Payment successfull!");
-                updateRaisedAmountInState(campaignId, Number(amount));
+                // updateRaisedAmountInState(campaignId, Number(amount));
+                window.location.reload();
                 setIsPayment(false);
               } else {
                 alert("Payment failed!");

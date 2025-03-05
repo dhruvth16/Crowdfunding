@@ -7,10 +7,10 @@ import gsap from "gsap";
 
 function CampaignCard({
   campaigns,
-  updateRaisedAmountInState,
-}: {
+}: // updateRaisedAmountInState,
+{
   campaigns: Campaign[];
-  updateRaisedAmountInState: (campaignId: string, amount: number) => void;
+  // updateRaisedAmountInState: (campaignId: string, amount: number) => void;
 }) {
   const [isPayment, setIsPayment] = useState(false);
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(
@@ -91,7 +91,7 @@ function CampaignCard({
           paymentRef={paymentRef}
           setIsPayment={setIsPayment}
           campaignId={selectedCampaignId}
-          updateRaisedAmountInState={updateRaisedAmountInState}
+          // updateRaisedAmountInState={updateRaisedAmountInState}
         />
       )}
     </div>
