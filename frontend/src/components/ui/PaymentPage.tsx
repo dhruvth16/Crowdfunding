@@ -56,7 +56,7 @@ PaymentProps) {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_PAYMENT_URL}/create-payment`,
+        `${import.meta.env.VITE_BASE_URL}/payment/create-payment`,
         {
           amount: Number(amount),
           currency,
