@@ -21,7 +21,7 @@ function UserSignup() {
 
   const signup = async () => {
     const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/user/signup`,
+      `${import.meta.env.VITE_BASE_URL}/api/v1/user/signup`,
       {
         email,
         password,

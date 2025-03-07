@@ -17,7 +17,7 @@ function AdminSignin() {
 
   const signin = async () => {
     const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/admin/signin`,
+      `${import.meta.env.VITE_BASE_URL}/api/v1/admin/signin`,
       {
         email,
         password,
@@ -37,7 +37,7 @@ function AdminSignin() {
         <Link to="/">Crowdfunding</Link>
       </h2>
       <div className="md:w-1/2 w-full h-screen flex items-center justify-center p-4 flex-col">
-        <div className="md:w-3/4 md:mt-0 w-full mt-[220px] bg-gradient-to-l from-blue-100 to-blue-50 p-8 rounded-lg">
+        <div className="md:w-3/4 w-full bg-gradient-to-l from-blue-100 to-blue-50 p-8 rounded-lg">
           <h2 className="text-2xl font-semibold mb-4 text-center">Sign in</h2>
           <form onSubmit={(e) => e.preventDefault()}>
             <div>

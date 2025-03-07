@@ -41,7 +41,9 @@ function AdminCampaignCard({
 
     try {
       await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/admin/remove-campaign/${campaignId}`,
+        `${
+          import.meta.env.VITE_BASE_URL
+        }/api/v1/admin/remove-campaign/${campaignId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -70,7 +72,10 @@ function AdminCampaignCard({
                 <div className="bg-gray-100 flex items-center justify-center object-cover rounded-md md:w-80 w-full h-40">
                   <img
                     className="h-40 md:w-40 w-full rounded-md"
-                    src={campaign.image}
+                    src={
+                      campaign.image &&
+                      `${import.meta.env.VITE_BASE_URL}${campaign.image}`
+                    }
                     alt="campaign image"
                   />
                 </div>

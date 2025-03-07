@@ -16,7 +16,7 @@ export interface Campaign {
   category: string;
 }
 
-function UserDashBoard() {
+function AdminDashBoard() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -73,7 +73,7 @@ function UserDashBoard() {
     const getCampaigns = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/admin/get-campaign`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/admin/get-campaign`,
           {
             headers: { Authorization: token ? `Bearer ${token}` : "" },
           }
@@ -179,4 +179,4 @@ function UserDashBoard() {
   );
 }
 
-export default UserDashBoard;
+export default AdminDashBoard;

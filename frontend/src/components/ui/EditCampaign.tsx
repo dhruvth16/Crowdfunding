@@ -46,7 +46,9 @@ function EditCampaign({
 
     try {
       const response = await axios.put(
-        `${import.meta.env.VITE_BASE_URL}/admin/edit-campaign/${campaignId}`,
+        `${
+          import.meta.env.VITE_BASE_URL
+        }/api/v1/admin/edit-campaign/${campaignId}`,
         {
           name,
           description,

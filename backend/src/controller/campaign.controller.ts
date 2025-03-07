@@ -3,7 +3,19 @@ import { CustomRequest } from "../middleware/auth.middleware.";
 import { CategoryType, Status } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
 import { z } from 'zod'
+import multer from "multer";
+import path from "path";
 const prisma = new PrismaClient();
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads/"); 
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    },
+});
+const upload = multer({ storage });
 
 export const createCampaign = async (req: CustomRequest, res: Response): Promise<void> => {
     if (!req.adminId) {
@@ -31,12 +43,15 @@ export const createCampaign = async (req: CustomRequest, res: Response): Promise
         });
         return
     }
+    console.log(req.file)
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
 
     const campaignData = {
         ...parsedData.data,
         target_amt: parsedData.data.target_amt.toString(),
         creator_id, 
         location: parsedData.data.location || null, 
+        image
     };
 
     try {
@@ -52,6 +67,8 @@ export const createCampaign = async (req: CustomRequest, res: Response): Promise
         return
     }
 };
+
+export const uploadMiddleware = upload.single("image");
 
 export const getAllCampaign = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -72,3 +89,4 @@ export const getAllCampaign = async (req: Request, res: Response): Promise<void>
         })
     }
 }
+

@@ -16,18 +16,22 @@ function UserSignup() {
   const navigate = useNavigate();
 
   const signin = async () => {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/user/signin`,
-      {
-        email,
-        password,
-      }
-    );
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/user/signin`,
+        {
+          email,
+          password,
+        }
+      );
 
-    setUser(response.data);
-    localStorage.setItem("user", JSON.stringify(response.data.token));
-    navigate("/user-dashboard");
-    console.log("User::: ", response.data);
+      setUser(response.data);
+      localStorage.setItem("user", JSON.stringify(response.data.token));
+      navigate("/user-dashboard");
+      console.log("User::: ", response.data);
+    } catch (error) {
+      console.error("Error signing in:", error);
+    }
   };
 
   return (
@@ -37,7 +41,7 @@ function UserSignup() {
         <Link to="/">Crowdfunding</Link>
       </h2>
       <div className="md:w-1/2 w-full h-screen flex items-center justify-center p-4 flex-col">
-        <div className="md:w-3/4 md:mt-0 w-full mt-[220px] bg-gradient-to-l from-blue-100 to-blue-50 p-8 rounded-lg">
+        <div className="md:w-3/4 w-full bg-gradient-to-l from-blue-100 to-blue-50 p-8 rounded-lg">
           <h2 className="text-2xl font-semibold mb-4 text-center">Sign in</h2>
           <form onSubmit={(e) => e.preventDefault()}>
             <div>

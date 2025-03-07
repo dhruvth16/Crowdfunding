@@ -8,12 +8,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllCampaign = exports.createCampaign = void 0;
+exports.getAllCampaign = exports.uploadMiddleware = exports.createCampaign = void 0;
 const client_1 = require("@prisma/client");
 const client_2 = require("@prisma/client");
 const zod_1 = require("zod");
+const multer_1 = __importDefault(require("multer"));
 const prisma = new client_2.PrismaClient();
+const storage = multer_1.default.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads/");
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    },
+});
+const upload = (0, multer_1.default)({ storage });
 const createCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.adminId) {
         res.status(401).json({ message: "Unauthorized: Admin ID missing" });
@@ -38,7 +51,9 @@ const createCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function*
         });
         return;
     }
-    const campaignData = Object.assign(Object.assign({}, parsedData.data), { target_amt: parsedData.data.target_amt.toString(), creator_id, location: parsedData.data.location || null });
+    console.log(req.file);
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
+    const campaignData = Object.assign(Object.assign({}, parsedData.data), { target_amt: parsedData.data.target_amt.toString(), creator_id, location: parsedData.data.location || null, image });
     try {
         const campaign = yield prisma.campaign.create({
             data: campaignData,
@@ -53,6 +68,7 @@ const createCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.createCampaign = createCampaign;
+exports.uploadMiddleware = upload.single("image");
 const getAllCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const campaigns = yield prisma.campaign.findMany({

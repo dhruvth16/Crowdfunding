@@ -56,7 +56,7 @@ PaymentProps) {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/payment/create-payment`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/payment/create-payment`,
         {
           amount: Number(amount),
           currency,
@@ -84,7 +84,10 @@ PaymentProps) {
           };
 
           await axios
-            .post(`${import.meta.env.VITE_PAYMENT_URL}/verify-payment`, options)
+            .post(
+              `${import.meta.env.VITE_BASE_URL}/api/v1/payment/verify-payment`,
+              options
+            )
             .then((res) => {
               console.log(res.data);
               if (res.data.success) {

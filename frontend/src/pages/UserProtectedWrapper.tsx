@@ -15,7 +15,7 @@ function UserProtectedWrapper({ children }: { children: ReactNode }) {
 
     const fetchData = async () => {
       await axios
-        .get(`${import.meta.env.VITE_BASE_URL}/campaign/campaigns`, {
+        .get(`${import.meta.env.VITE_BASE_URL}/api/v1/campaign/campaigns`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
