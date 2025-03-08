@@ -8,6 +8,8 @@ import { router as campaignRouter} from './routes/campaign.route';
 import { router as paymentRouter } from './routes/payment.route'
 import path from 'path'
 
+const PORT = process.env.PORT || 5000
+
 app.use(express.json())
 app.use(cors({
     origin: ['https://crowdfunding-dz5hezds2-dhruvth16s-projects.vercel.app/', 'http://localhost:5173'],
@@ -21,6 +23,6 @@ app.use('/api/v1/campaign', campaignRouter)
 app.use('/api/v1/admin', adminRouter)
 app.use('/api/v1/payment', paymentRouter)
 
-app.listen(process.env.PORT || 5000, () => {
+app.listen(PORT || "0.0.0.0", () => {
     console.log(`App is running on port ${process.env.PORT}`)
 })
