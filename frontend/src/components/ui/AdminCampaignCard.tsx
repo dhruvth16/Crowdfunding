@@ -1,6 +1,5 @@
-import { Edit, X } from "lucide-react";
+import { CheckCircle, Edit, X } from "lucide-react";
 import { Campaign } from "../../pages/UserDashBoard";
-import Button from "./Button";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import EditCampaign from "./EditCampaign";
@@ -63,10 +62,11 @@ function AdminCampaignCard({
     <div>
       <div className="flex flex-col">
         {campaigns.map((campaign) => {
+          const isCompleted = campaign.target_amt == campaign.raised_amt;
           return (
             <div
               key={campaign.id}
-              className="border-[1px] border-gray-200 bg-gradient-to-r from-purple-50 to-purple-100 rounded-md p-8 m-6 flex flex-col items-center md:block"
+              className="relative border-[1px] border-gray-200 bg-gradient-to-r from-purple-50 to-purple-100 rounded-md p-8 m-6 flex flex-col items-center md:block"
             >
               <div className="flex md:flex-row flex-col items-start gap-8 ">
                 <div className="bg-gray-100 flex items-center justify-center object-cover rounded-md md:w-80 w-full h-40">
@@ -102,25 +102,35 @@ function AdminCampaignCard({
                   </div>
                 </div>
                 <div className="flex items-center gap-2 ">
-                  <div>
-                    <Button
-                      text="Edit"
-                      size="lg"
-                      variant="primary"
-                      icon={<Edit />}
-                      onClick={() => {
-                        setEditCampaign(true);
-                      }}
-                    />
-                  </div>
-                  <Button
-                    text="Delete"
-                    size="lg"
-                    variant="tertiary"
-                    icon={<X />}
+                  <button
+                    onClick={() => setEditCampaign(true)}
+                    disabled={isCompleted}
+                    className={`text-lg cursor-pointer px-4 rounded-full transition text-white flex items-center gap-2 py-1 font-semibold ${
+                      isCompleted
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-indigo-600 text-white hover:bg-indigo-700"
+                    }`}
+                  >
+                    Edit <Edit />
+                  </button>
+
+                  <button
                     onClick={() => deleteCampaign(campaign.id)}
-                  />
+                    disabled={isCompleted}
+                    className={`text-lg cursor-pointer px-4 rounded-full transition text-white flex items-center gap-2 py-1 font-semibold ${
+                      isCompleted
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-red-600 text-white hover:bg-red-700"
+                    }`}
+                  >
+                    Delete <X />
+                  </button>
                 </div>
+                {isCompleted && (
+                  <div className="absolute bottom-10 right-5 mt-5">
+                    <CheckCircle color="green" />
+                  </div>
+                )}
               </div>
 
               <EditCampaign

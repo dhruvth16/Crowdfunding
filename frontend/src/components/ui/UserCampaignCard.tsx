@@ -1,17 +1,10 @@
-import { Droplet } from "lucide-react";
-import Button from "./Button";
+import { CheckCircle, Droplet } from "lucide-react";
 import { Campaign } from "../../pages/UserDashBoard";
 import PaymentPage from "./PaymentPage";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
-function CampaignCard({
-  campaigns,
-}: // updateRaisedAmountInState,
-{
-  campaigns: Campaign[];
-  // updateRaisedAmountInState: (campaignId: string, amount: number) => void;
-}) {
+function CampaignCard({ campaigns }: { campaigns: Campaign[] }) {
   const [isPayment, setIsPayment] = useState(false);
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(
     null
@@ -35,6 +28,7 @@ function CampaignCard({
     <div>
       <div className="flex flex-col">
         {campaigns.map((campaign) => {
+          const isDisabled = campaign.target_amt == campaign.raised_amt;
           return (
             <div
               key={campaign.id}
@@ -59,29 +53,40 @@ function CampaignCard({
                     <p className="text-gray-600 mb-4 capitalize">
                       {campaign.description}
                     </p>
-                    <p className="text-sm">
-                      Target Amount:{" "}
-                      <span className="font-semibold">
-                        {campaign.target_amt}
-                      </span>
-                    </p>
+                    <div className="flex flex-col">
+                      <p className="text-sm">
+                        Target Amount:{" "}
+                        <span className="font-semibold">
+                          {campaign.target_amt}
+                        </span>
+                      </p>
+                      <p className="text-sm mt-4">
+                        Raised Amount:{" "}
+                        <span className="font-semibold">
+                          {campaign.raised_amt}
+                        </span>
+                      </p>
+                    </div>
                   </div>
                   <div className="flex flex-col-reverse md:block">
                     <div className="md:mb-8 my-4">
-                      <Button
-                        variant="primary"
-                        size="lg"
-                        text="Donate"
-                        icon={<Droplet />}
+                      <button
                         onClick={() => handleDonateClick(campaign.id)}
-                      />
+                        disabled={isDisabled}
+                        className={`text-lg cursor-pointer px-4 rounded-full transition font-semibold flex items-center gap-2 py-2 ${
+                          isDisabled
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-indigo-600 text-white hover:bg-indigo-700"
+                        }`}
+                      >
+                        Donate{" "}
+                        {isDisabled ? (
+                          <CheckCircle color="green" />
+                        ) : (
+                          <Droplet />
+                        )}
+                      </button>
                     </div>
-                    <p className="text-sm md:text-right">
-                      Raised Amount:{" "}
-                      <span className="font-semibold">
-                        {campaign.raised_amt}
-                      </span>
-                    </p>
                   </div>
                 </div>
               </div>
@@ -94,7 +99,6 @@ function CampaignCard({
           paymentRef={paymentRef}
           setIsPayment={setIsPayment}
           campaignId={selectedCampaignId}
-          // updateRaisedAmountInState={updateRaisedAmountInState}
         />
       )}
     </div>
