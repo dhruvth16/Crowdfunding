@@ -23,6 +23,6 @@ app.use('/api/v1/campaign', campaignRouter)
 app.use('/api/v1/admin', adminRouter)
 app.use('/api/v1/payment', paymentRouter)
 
-app.listen(PORT || "0.0.0.0", () => {
+app.listen(PORT || 5000, () => {
     console.log(`App is running on port ${process.env.PORT}`)
 })

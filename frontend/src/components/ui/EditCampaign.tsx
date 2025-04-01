@@ -1,4 +1,4 @@
-import { RefObject, useState } from "react";
+import { RefObject, useEffect, useState } from "react";
 import Button from "./Button";
 import { Input, inputVariants } from "./Input";
 import { Edit, X } from "lucide-react";
@@ -21,24 +21,49 @@ function EditCampaign({
   campaignId,
   updateCampaignInState,
 }: CreateCampaignProps) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [target_amt, setTarget_amt] = useState("");
-  const [location, setLocation] = useState("");
-  const [status, setStatus] = useState("");
-  const [category, setCategory] = useState("");
-  const [image, setImage] = useState("");
   const token = localStorage.getItem("admin")?.replace(/^"(.*)"$/, "$1");
 
+  const [campaignData, setCampaignData] = useState({
+    name: "",
+    description: "",
+    target_amt: "",
+    location: "",
+    status: "",
+    category: "",
+    image: "",
+  });
+
+  useEffect(() => {
+    const fetchCampaign = async () => {
+      try {
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_BASE_URL
+          }/api/v1/admin/campaign/${campaignId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setCampaignData(response.data.campaign); // Ensure you access `campaign` from response
+      } catch (error) {
+        console.error("Error fetching campaign data:", error);
+      }
+    };
+
+    fetchCampaign();
+  }, [campaignId]);
+
   const editCampaign = async () => {
+    const { name, description, target_amt, location, status, category, image } =
+      campaignData;
+
     if (
       !name.trim() ||
       !description.trim() ||
       !target_amt.trim() ||
       !location.trim() ||
       !status.trim() ||
-      !category.trim() ||
-      !image.trim()
+      !category.trim()
     ) {
       setEditCampaign(false);
       return;
@@ -64,8 +89,8 @@ function EditCampaign({
       );
 
       updateCampaignInState(campaignId, response.data);
-
       setEditCampaign(false);
+      window.location.reload();
     } catch (error) {
       console.error("Error editing campaign:", error);
       setEditCampaign(false);
@@ -83,7 +108,7 @@ function EditCampaign({
       >
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold text-center mb-5">
-            Create Campaign
+            Edit Campaign
           </h1>
           <div
             onClick={() => setEditCampaign(false)}
@@ -93,104 +118,126 @@ function EditCampaign({
           </div>
         </div>
 
+        {/* Campaign Name */}
         <div className="mb-3">
           <label htmlFor="name" className="text-lg font-semibold">
             Campaign Name
           </label>
-          <Input id="name" value={name} setValue={setName} type="text" />
+          <Input
+            id="name"
+            value={campaignData.name || ""}
+            setValue={(value) =>
+              setCampaignData((prev) => ({ ...prev, name: value }))
+            }
+            type="text"
+          />
         </div>
 
+        {/* Description */}
         <div className="mb-3">
           <label htmlFor="description" className="text-lg font-semibold">
             Description
           </label>
           <Input
             id="description"
-            value={description}
-            setValue={setDescription}
+            value={campaignData.description || ""}
+            setValue={(value) =>
+              setCampaignData((prev) => ({ ...prev, description: value }))
+            }
             type="text"
           />
         </div>
 
+        {/* Target Amount */}
         <div className="mb-3">
           <label htmlFor="target_amt" className="text-lg font-semibold">
-            Target amount
+            Target Amount
           </label>
           <Input
             id="target_amt"
-            value={target_amt}
-            setValue={setTarget_amt}
-            type="text"
+            value={campaignData.target_amt || ""}
+            setValue={(value) =>
+              setCampaignData((prev) => ({ ...prev, target_amt: value }))
+            }
+            type="number"
           />
         </div>
 
+        {/* Location */}
         <div className="mb-3">
           <label htmlFor="location" className="text-lg font-semibold">
             Location
           </label>
           <Input
             id="location"
-            value={location}
-            setValue={setLocation}
+            value={campaignData.location || ""}
+            setValue={(value) =>
+              setCampaignData((prev) => ({ ...prev, location: value }))
+            }
             type="text"
           />
         </div>
 
+        {/* Status */}
         <div className="mb-3">
           <label htmlFor="status" className="text-lg font-semibold">
             Status
           </label>
           <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
+            value={campaignData.status || ""}
+            onChange={(e) =>
+              setCampaignData((prev) => ({ ...prev, status: e.target.value }))
+            }
             className={inputVariants}
           >
-            <option className="uppercase" value="ss">
-              Select status
-            </option>
-            <option className="uppercase" value="active" autoFocus>
-              Active
-            </option>
-            <option className="uppercase" value="completed">
-              Completed
-            </option>
+            <option value="">Select status</option>
+            <option value="ACTIVE">Active</option>
+            <option value="COMPLETED">Completed</option>
           </select>
         </div>
 
+        {/* Category */}
         <div className="mb-3">
           <label htmlFor="category" className="text-lg font-semibold">
             Category
           </label>
           <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={campaignData.category || ""}
+            onChange={(e) =>
+              setCampaignData((prev) => ({ ...prev, category: e.target.value }))
+            }
             className={inputVariants}
           >
-            <option className="uppercase" value="sc">
-              Select category
-            </option>
-            <option className="uppercase" value="education">
-              Education
-            </option>
-            <option className="uppercase" value="health">
-              Health
-            </option>
-            <option className="uppercase" value="disaster_Relief">
-              Disaster_Relief
-            </option>
-            <option className="uppercase" value="orphanage">
-              Orphanage
-            </option>
+            <option value="">Select category</option>
+            <option value="EDUCATION">Education</option>
+            <option value="HEALTH">Health</option>
+            <option value="DISASTER_RELIEF">Disaster Relief</option>
+            <option value="ORPHANAGE">Orphanage</option>
           </select>
         </div>
 
+        {/* Image */}
         <div className="mb-3">
-          <label htmlFor="location" className="text-lg font-semibold">
-            Campaign image
+          <label htmlFor="image" className="text-lg font-semibold">
+            Campaign Image
           </label>
-          <Input id="image" value={image} setValue={setImage} type="file" />
+          <input
+            id="image"
+            type="file"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setCampaignData((prev) => ({ ...prev, image: file.name }));
+              }
+            }}
+            className={inputVariants}
+          />
+          {campaignData.image && (
+            <p className="mt-2">Current: {campaignData.image}</p>
+          )}
         </div>
 
+        {/* Submit Button */}
         <div className="flex justify-center">
           <Button
             variant="primary"

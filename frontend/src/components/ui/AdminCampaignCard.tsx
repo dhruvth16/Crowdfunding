@@ -62,7 +62,8 @@ function AdminCampaignCard({
     <div>
       <div className="flex flex-col">
         {campaigns.map((campaign) => {
-          const isCompleted = campaign.target_amt == campaign.raised_amt;
+          const isCompleted =
+            Number(campaign.target_amt) === campaign.raised_amt;
           return (
             <div
               key={campaign.id}

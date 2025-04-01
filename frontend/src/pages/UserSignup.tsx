@@ -33,7 +33,7 @@ function UserSignup() {
     );
 
     setUser(response.data);
-    navigate("/user-dashboard");
+    navigate("/userSignin");
     console.log("User::: ", response.data);
   };
 

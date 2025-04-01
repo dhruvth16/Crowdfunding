@@ -286,3 +286,38 @@ export const getCampaign = async (req: CustomRequest, res: Response): Promise<vo
         return
     }
 }
+
+export const getSpecificCampaign = async (req: CustomRequest, res: Response): Promise<void>  => {
+    if (!req.adminId) {
+      res.status(401).json({ message: "Unauthorized: Admin ID missing" });
+      return
+    }
+    const admin = parseInt(req.adminId); 
+    console.log(admin)
+
+    const {id} = req.params;
+    console.log(id)
+
+    try {
+        const campaign = await prisma.campaign.findUnique({
+          where: { id: Number(id) }
+        });
+
+        if (!campaign) {
+          res.status(404).json({ message: "Campaign not found" });
+          return;
+        }
+
+        if (campaign.creator_id !== admin) {
+          res.status(403).json({ message: "Forbidden: You are not the owner of this campaign" });
+          return;
+        }
+
+        res.json({ campaign });
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({
+        message: "Internal server error!"
+      })
+    }
+}

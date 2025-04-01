@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCampaign = exports.removeCampaign = exports.editCampaign = exports.adminSignin = exports.adminSignup = exports.prisma = void 0;
+exports.getSpecificCampaign = exports.getCampaign = exports.removeCampaign = exports.editCampaign = exports.adminSignin = exports.adminSignup = exports.prisma = void 0;
 const client_1 = require("@prisma/client");
 exports.prisma = new client_1.PrismaClient();
 const zod_1 = require("zod");
@@ -270,3 +270,34 @@ const getCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.getCampaign = getCampaign;
+const getSpecificCampaign = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.adminId) {
+        res.status(401).json({ message: "Unauthorized: Admin ID missing" });
+        return;
+    }
+    const admin = parseInt(req.adminId);
+    console.log(admin);
+    const { id } = req.params;
+    console.log(id);
+    try {
+        const campaign = yield exports.prisma.campaign.findUnique({
+            where: { id: Number(id) }
+        });
+        if (!campaign) {
+            res.status(404).json({ message: "Campaign not found" });
+            return;
+        }
+        if (campaign.creator_id !== admin) {
+            res.status(403).json({ message: "Forbidden: You are not the owner of this campaign" });
+            return;
+        }
+        res.json({ campaign });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Internal server error!"
+        });
+    }
+});
+exports.getSpecificCampaign = getSpecificCampaign;

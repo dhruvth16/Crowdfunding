@@ -16,3 +16,4 @@ exports.router.post('/signin', admin_controller_1.adminSignin);
 exports.router.get('/get-campaign', auth_middleware_1.authMiddleware, admin_controller_1.getCampaign);
 exports.router.put('/edit-campaign/:id', auth_middleware_1.authMiddleware, admin_controller_1.editCampaign);
 exports.router.delete('/remove-campaign/:id', auth_middleware_1.authMiddleware, admin_controller_1.removeCampaign);
+exports.router.get('/campaign/:id', auth_middleware_1.authMiddleware, admin_controller_1.getSpecificCampaign);

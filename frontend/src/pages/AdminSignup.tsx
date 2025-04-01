@@ -33,7 +33,7 @@ function AdminSignup() {
     );
 
     setAdmin(response.data);
-    navigate("/admin-dashboard");
+    navigate("/adminSignin");
     console.log("Admin::: ", response.data);
   };
 

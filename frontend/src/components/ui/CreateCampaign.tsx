@@ -1,7 +1,7 @@
 import { RefObject, useState } from "react";
 import Button from "./Button";
 import { Input, inputVariants } from "./Input";
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import axios from "axios";
 
 interface CreateCampaignProps {
@@ -180,6 +180,7 @@ function CreateCampaign({ campaignRef, setIscampaign }: CreateCampaignProps) {
             text="Create Campaign"
             size="lg"
             onClick={createCampaign}
+            icon={<Plus />}
           />
         </div>
       </form>

@@ -28,11 +28,13 @@ function CampaignCard({ campaigns }: { campaigns: Campaign[] }) {
     <div>
       <div className="flex flex-col">
         {campaigns.map((campaign) => {
-          const isDisabled = campaign.target_amt == campaign.raised_amt;
+          const isDisabled = Number(campaign.target_amt) == campaign.raised_amt;
           return (
             <div
               key={campaign.id}
-              className="border-[1px] border-gray-200 bg-gradient-to-r from-purple-50 to-purple-100 rounded-md p-8 m-6"
+              className={`border-[1px] border-gray-200 bg-gradient-to-r from-purple-50 to-purple-100 rounded-md p-8 m-6 ${
+                isDisabled ? "hidden" : "block"
+              }`}
             >
               <div className="flex md:flex-row flex-col items-start gap-8">
                 <div className="bg-gray-100 flex items-center justify-center object-cover rounded-md md:w-40 w-full h-40">

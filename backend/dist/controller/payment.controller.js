@@ -75,6 +75,9 @@ const verifyPayment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 id: campaignId
             }
         });
+        if (a) {
+            a.status = parseInt(a.target_amt) === a.raised_amt ? "COMPLETED" : "ACTIVE";
+        }
         console.log("Updated campaign: ", a);
         res.json({ success: true, message: "Payment verified and campaign updated" });
     }
