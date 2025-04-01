@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSpecificCampaign = exports.getCampaign = exports.removeCampaign = exports.editCampaign = exports.adminSignin = exports.adminSignup = exports.prisma = void 0;
+exports.adminLogout = exports.getSpecificCampaign = exports.getCampaign = exports.removeCampaign = exports.editCampaign = exports.adminSignin = exports.adminSignup = exports.prisma = void 0;
 const client_1 = require("@prisma/client");
 exports.prisma = new client_1.PrismaClient();
 const zod_1 = require("zod");
@@ -301,3 +301,61 @@ const getSpecificCampaign = (req, res) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.getSpecificCampaign = getSpecificCampaign;
+function createToken(token) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const expirationTime = new Date();
+        expirationTime.setMinutes(expirationTime.getMinutes() + 30);
+        const newToken = yield exports.prisma.expireToken.create({
+            data: {
+                token: token,
+                expireAt: expirationTime,
+            },
+        });
+        console.log(newToken);
+    });
+}
+function logout(token) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const existingToken = yield exports.prisma.expireToken.findFirst({
+                where: {
+                    token: token,
+                },
+            });
+            if (!existingToken) {
+                throw new Error('Token not found or already invalid');
+            }
+            const updatedToken = yield exports.prisma.expireToken.update({
+                where: {
+                    id: existingToken.id,
+                },
+                data: {
+                    expireAt: new Date(),
+                },
+            });
+            console.log('Token invalidated successfully:', updatedToken);
+            return { success: true, message: 'Logged out successfully' };
+        }
+        catch (error) {
+            console.error('Logout error:', error.message);
+            throw new Error('Logout failed: ' + error.message);
+        }
+    });
+}
+const adminLogout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const token = (_a = req.headers['authorization']) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+    if (!token) {
+        res.status(400).json({ error: 'No token provided' });
+        return;
+    }
+    try {
+        yield createToken(token);
+        const result = yield logout(token);
+        res.status(200).json(result);
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+exports.adminLogout = adminLogout;

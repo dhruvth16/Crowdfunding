@@ -64,6 +64,7 @@ function AdminCampaignCard({
         {campaigns.map((campaign) => {
           const isCompleted =
             Number(campaign.target_amt) === campaign.raised_amt;
+          const isRaisedAmtZero = campaign.raised_amt !== 0;
           return (
             <div
               key={campaign.id}
@@ -104,8 +105,16 @@ function AdminCampaignCard({
                 </div>
                 <div className="flex items-center gap-2 ">
                   <button
-                    onClick={() => setEditCampaign(true)}
-                    disabled={isCompleted}
+                    onClick={() => {
+                      if (isCompleted) {
+                        alert(
+                          "Raised amount already reached the target amount!"
+                        );
+                        return;
+                      }
+                      setEditCampaign(true);
+                    }}
+                    // disabled={isCompleted}
                     className={`text-lg cursor-pointer px-4 rounded-full transition text-white flex items-center gap-2 py-1 font-semibold ${
                       isCompleted
                         ? "bg-gray-400 cursor-not-allowed"
@@ -116,10 +125,16 @@ function AdminCampaignCard({
                   </button>
 
                   <button
-                    onClick={() => deleteCampaign(campaign.id)}
-                    disabled={isCompleted}
+                    onClick={() => {
+                      if (!isRaisedAmtZero) deleteCampaign(campaign.id);
+                      if (isCompleted)
+                        alert(
+                          "Raised amount already reached the target amount!"
+                        );
+                      else alert("Cannot delete the campaign!");
+                    }}
                     className={`text-lg cursor-pointer px-4 rounded-full transition text-white flex items-center gap-2 py-1 font-semibold ${
-                      isCompleted
+                      isCompleted || isRaisedAmtZero
                         ? "bg-gray-400 cursor-not-allowed"
                         : "bg-red-600 text-white hover:bg-red-700"
                     }`}

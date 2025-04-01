@@ -1,10 +1,11 @@
-import { ArrowDown, Plus, X } from "lucide-react";
+import { ArrowDown, ArrowLeft, Plus, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import gsap from "gsap";
 import Button from "../components/ui/Button";
 import CreateCampaign from "../components/ui/CreateCampaign";
 import AdminCampaignCard from "../components/ui/AdminCampaignCard";
+import { useNavigate } from "react-router-dom";
 
 export interface Campaign {
   id: string;
@@ -26,6 +27,7 @@ function AdminDashBoard() {
   const token = localStorage.getItem("admin")?.replace(/^"(.*)"$/, "$1");
   const categoryRef = useRef<HTMLDivElement>(null);
   const campaignRef = useRef<HTMLDivElement>(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const updateCampaignInState = (
     campaignId: string,
@@ -101,8 +103,47 @@ function AdminDashBoard() {
     setCategory(false);
   };
 
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const token = localStorage.getItem("admin")?.replace(/^"(.*)"$/, "$1");
+    if (!token) {
+      localStorage.removeItem("admin");
+      navigate("/userSignin");
+      return;
+    }
+
+    setIsLoggingOut(true);
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/logout`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      localStorage.removeItem("admin");
+      navigate("/adminSignin");
+    } catch (error) {
+      console.error("Logout error:", error);
+      alert("Failed to log out. Please try again.");
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
   return (
     <div className="md:px-4 lg:px-40 px-2 w-full min-h-screen pt-[70px] bg-gray-50 overflow-y-scroll no-scrollbar">
+      <button
+        onClick={handleLogout}
+        disabled={isLoggingOut}
+        className={`text-red-500 flex items-center gap-2 font-semibold text-lg hover:underline hover:cursor-pointer ${
+          isLoggingOut ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        <ArrowLeft />
+        {isLoggingOut ? "Logging out..." : "Log out"}
+      </button>
       <div className="flex items-center gap-4 justify-between py-4 text-black">
         <div className="flex items-center md:gap-2 font-semibold md:text-3xl text-lg">
           <h2>Campaign by you</h2>

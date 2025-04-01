@@ -155,3 +155,64 @@ export const userSignin = async (req: Request, res: Response): Promise<void> => 
         })
     }
 }
+
+async function createToken(token: string) {
+  const expirationTime = new Date();
+  expirationTime.setMinutes(expirationTime.getMinutes() + 30);
+
+  const newToken = await prisma.expireToken.create({
+    data: {
+      token: token,
+      expireAt: expirationTime,
+    },
+  });
+
+  console.log(newToken);
+}
+
+async function logout(token: string) {
+  
+  try {
+    const existingToken = await prisma.expireToken.findFirst({
+      where: {
+        token: token,
+      },
+    });
+
+    if (!existingToken) {
+      throw new Error('Token not found or already invalid');
+    }
+
+    const updatedToken = await prisma.expireToken.update({
+      where: {
+        id: existingToken.id,
+      },
+      data: {
+        expireAt: new Date(),
+      },
+    });
+
+    console.log('Token invalidated successfully:', updatedToken);
+    return { success: true, message: 'Logged out successfully' };
+  } catch (error: any) {
+    console.error('Logout error:', error.message);
+    throw new Error('Logout failed: ' + error.message);
+  }
+}
+
+export const userLogout = async (req: Request, res: Response) => {
+  const token = req.headers['authorization']?.split(' ')[1]; 
+
+  if (!token) {
+    res.status(400).json({ error: 'No token provided' });
+    return
+  }
+
+  try {
+    await createToken(token)
+    const result = await logout(token);
+    res.status(200).json(result);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+}

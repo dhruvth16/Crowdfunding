@@ -74,3 +74,9 @@ model Payment {
   status     String   @default("PENDING")
   createdAt  DateTime @default(now())
 }
+
+model ExpireToken {
+  id       String   @id @default(uuid())
+  token    String
+  expireAt DateTime
+}

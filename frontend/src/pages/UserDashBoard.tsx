@@ -1,8 +1,9 @@
-import { ArrowDown, X } from "lucide-react";
+import { ArrowDown, ArrowLeft, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import CampaignCard from "../components/ui/UserCampaignCard";
 import gsap from "gsap";
+import { useNavigate } from "react-router-dom";
 
 export interface Campaign {
   id: string;
@@ -21,6 +22,7 @@ function UserDashBoard() {
   const token = localStorage.getItem("user");
   const [category, setCategory] = useState(false);
   const categoryRef = useRef(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     if (category && categoryRef.current) {
@@ -62,6 +64,35 @@ function UserDashBoard() {
     setCategory(false);
   };
 
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const token = localStorage.getItem("user")?.replace(/^"(.*)"$/, "$1");
+    if (!token) {
+      localStorage.removeItem("user");
+      navigate("/userSignin");
+      return;
+    }
+
+    setIsLoggingOut(true);
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/user/logout`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      localStorage.removeItem("user");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      alert("Failed to log out. Please try again.");
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
   // const updateRaisedAmountInState = (
   //   campaignId: string,
   //   donatedAmount: number
@@ -77,6 +108,16 @@ function UserDashBoard() {
 
   return (
     <div className="md:px-4 lg:px-40 px-2 w-full min-h-screen pt-[70px] bg-gray-50">
+      <button
+        onClick={handleLogout}
+        disabled={isLoggingOut}
+        className={`text-red-500 flex items-center gap-2 font-semibold text-lg hover:underline hover:cursor-pointer ${
+          isLoggingOut ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        <ArrowLeft />
+        {isLoggingOut ? "Logging out..." : "Log out"}
+      </button>
       <div className="flex items-center justify-between py-4 text-black">
         <h1 className="font-semibold text-3xl">Campaigns</h1>
         <h2
