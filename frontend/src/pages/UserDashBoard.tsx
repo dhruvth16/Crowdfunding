@@ -84,7 +84,7 @@ function UserDashBoard() {
         }
       );
       localStorage.removeItem("user");
-      navigate("/login");
+      navigate("/userSignin");
     } catch (error) {
       console.error("Logout error:", error);
       alert("Failed to log out. Please try again.");

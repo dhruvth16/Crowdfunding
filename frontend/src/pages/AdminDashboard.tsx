@@ -109,7 +109,7 @@ function AdminDashBoard() {
     const token = localStorage.getItem("admin")?.replace(/^"(.*)"$/, "$1");
     if (!token) {
       localStorage.removeItem("admin");
-      navigate("/userSignin");
+      navigate("/adminSignin");
       return;
     }
 
